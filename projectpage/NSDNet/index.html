@@ -158,7 +158,7 @@
                     Method
                 </h3>
                 <div class="text-center">
-                    <img src="img/framework.png" width="750"/>
+                    <img src="img/framework_1.png" width="750"/>
 					<p class="text-justify">
 					Overall pipeline of our non-aligned supervision framework with physical priors for the real image dehazing. It includes the mvSA and non-aligned supervision modules. mvSA can effectively estimate the infinite airlight A∞ in real scenes. Our framework is different from the supervised dehazing models as it does not require aligned ground truths.
 					</p>
@@ -173,23 +173,44 @@
                     Results
                 </h3>
                 <div class="text-center">
-                    <img src="img/remove_smoke.png" width="750"/>
+                    <img src="img/remove_smoke_1.png" width="750"/>
 					<p class="text-center">
-					Example results on the real-world smoke dataset.
+					Example results on the real-world non-homogeneous smoke dataset.
 					</p>
                 </div>
 				
 				<div class="text-center">
-                    <img src="img/remove_hazy.png" width="750"/>
+                    <img src="img/remove_smoke_2.png" width="750"/>
 					<p class="text-center">
-					Comparison of dehazing results on the real-world Phone-Hazy dataset.
+					Example results on the real-world dense smoke dataset.
+					</p>
+                </div>
+				
+				<div class="text-center">
+                    <img src="img/remove_hazy_1.png" width="750"/>
+					<p class="text-center">
+					Comparison of dehazing results on the real-world Phone-Hazy dataset (rural scenery).
+					</p>
+                </div>
+				
+				<div class="text-center">
+                    <img src="img/remove_hazy_2.png" width="750"/>
+					<p class="text-center">
+					Comparison of dehazing results on the real-world Phone-Hazy dataset (urban roads).
+					</p>
+                </div>
+				
+				<div class="text-center">
+                    <img src="img/RTTS_dehazing.png" width="750"/>
+					<p class="text-center">
+					Comparison of dehazing results on the real-world RTTS dataset (wilderness and city buidings).
 					</p>
                 </div>
 				
 				<div class="text-justify">
-                    <img src="img/MoreResults.png" width="740"/>
+                    <img src="img/MoreResults_1.png" width="750"/>
 					<p class="text-center">
-					Comparison of dehazing results on the real-world Phone-Hazy dataset.
+					(a) - (c) shows our model's visual results on the Phone-Hazy dataset, while (d) - (e) shows the visualization of our model's test results on RTTS dataset.
 					</p>
                 </div>
 
@@ -200,23 +221,24 @@
             
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-			
-                <h3>
-                    Citation
-                </h3>		
-				<div class="form-group col-md-10 col-md-offset-1">
-				<p class="text-justify">
-				If you find our work useful in your research, please consider citing:
-				</p>
-					<textarea id="bibtex" class="form-control" readonly>
-					@article{fan2023non,
-					  title={Non-aligned supervision for Real Image Dehazing},
-					  author={Fan, Junkai and Guo, Fei and Qian, Jianjun and Li, 
-							  Xiang and Li, Jun and Yang, Jian},
-					  journal={arXiv preprint arXiv:2303.04940},
-					  year={2023}
-					}</textarea>
-				</div>
+				
+		
+                <h3>Citation</h3>	
+				
+				<p>If you find our work useful in your research, please consider citing:</p>			
+				<a href="https://arxiv.org/pdf/2303.04940.pdf"><img style="float: left; padding: 10px; PADDING-RIGHT: 30px;" alt="paper thumbnail" src="img/paper_thumbnail.png" width=160></a>
+
+					
+				<textarea id="bibtex" class="form-control" readonly>
+				
+				@article{fan2023non,
+				  title={Non-aligned supervision for Real Image Dehazing},
+				  author={Fan, Junkai and Guo, Fei and Qian, Jianjun and Li, 
+						  Xiang and Li, Jun and Yang, Jian},
+				  journal={arXiv preprint arXiv:2303.04940},
+				  year={2023}
+				}</textarea>
+
             </div>
         </div>
 
