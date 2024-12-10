@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Depth-Centric Dehazing and Depth-Estimation from Real-World Hazy Driving Video</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="https://fanjunkai1.github.io/projectpage/DCL/video/video-demo.mp4">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1296">
+    <meta property="og:image:height" content="840">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fanjunkai1.github.io/projectpage/DCL/"/>
+    <meta property="og:title" content="Depth-Centric Dehazing and Depth-Estimation from Real-World Hazy Driving Video" />
+    <meta property="og:description" content="Real driving-video dehazing poses a significant challenge due to the inherent difficulty in acquiring precisely aligned hazy/clear video pairs for effective model training, especially in dynamic driving scenarios with unpredictable weather conditions. 
+	In this paper, we propose a pioneering approach that addresses this challenge through a non-aligned regularization strategy. Our core concept involves identifying clear frames that closely match hazy frames, serving as references to supervise a video dehazing network. Our approach comprises 
+	two key components: reference matching and video dehazing. Firstly, we introduce a non-aligned reference frame matching module, leveraging an adaptive sliding window to match high-quality reference frames from clear videos. Video dehazing incorporates flow-guided cosine attention sampler and
+	deformable cosine attention fusion modules to enhance spatial multi-frame alignment and fuse their improved information. To validate our approach, we collect a GoPro-Hazy dataset captured effortlessly with GoPro cameras in diverse rural and urban road environments. Extensive experiments 
+	demonstrate the superiority of the proposed method over current state-of-the-art methods in the challenging task of real driving-video dehazing. />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Driving-Video Dehazing with Non-Aligned Regularization for Safety Assistance" />
+    <meta name="twitter:description" content="Real driving-video dehazing poses a significant challenge due to the inherent difficulty in acquiring precisely aligned hazy/clear video pairs for effective model training, especially in dynamic driving scenarios with unpredictable weather conditions. 
+	In this paper, we propose a pioneering approach that addresses this challenge through a non-aligned regularization strategy. Our core concept involves identifying clear frames that closely match hazy frames, serving as references to supervise a video dehazing network. Our approach comprises 
+	two key components: reference matching and video dehazing. Firstly, we introduce a non-aligned reference frame matching module, leveraging an adaptive sliding window to match high-quality reference frames from clear videos. Video dehazing incorporates flow-guided cosine attention sampler and
+	deformable cosine attention fusion modules to enhance spatial multi-frame alignment and fuse their improved information. To validate our approach, we collect a GoPro-Hazy dataset captured effortlessly with GoPro cameras in diverse rural and urban road environments. Extensive experiments 
+	demonstrate the superiority of the proposed method over current state-of-the-art methods in the challenging task of real driving-video dehazing. />
+	
+    <meta name="twitter:image" content="https://fanjunkai1.github.io/projectpage/DCL/video/video-demo.mp4" />
+
+
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    
+    <script src="js/app.js"></script>
+    <script src="js/video_comparison.js"></script>
+</head>
+
+<body>
+    <div class="container" id="main">
+        <div class="row">
+            <h2 class="col-md-12 text-center">
+                <br><b> Depth-Centric Dehazing and Depth-Estimation from <br>Real-World Hazy Driving Video </b></br> 
+                <small>
+					arxiv 2024
+                </small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="list-inline">
+                    <li>
+                        <a href="https://fanjunkai1.github.io/">
+                          Junkai Fan<sup>1</sup>
+                        </a>
+                    </li>
+					<li>
+                        <a href="https://github.com/w2kun">
+                          Kun Wang<sup>1</sup>
+                        </a>
+                    </li>
+					<li>
+                        <a href="https://yanzq95.github.io/">
+                          Zhiqiang Yan<sup>1</sup>
+                        </a>
+                    </li>
+					<li>
+                        <a href="https://cschenxiang.github.io/">
+                          Xiang chen<sup>1</sup>
+                        </a>
+                    </li>
+					<li>
+                        <a href="">
+                          Shangbin Gao<sup>2</sup>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://sites.google.com/view/junlineu/">
+                          Jun Li*<sup>1</sup>
+                        </a>
+                    </li>
+					<li>
+                        <a href="http://202.119.85.163/open/TutorInfo.aspx?dsbh=tLbjVM9T1OzsoNduSpyHQg==&yxsh=4iVdgPyuKTE=&zydm=L-3Jh59wXco=">
+                          Jian Yang*<sup>1</sup>
+                        </a>
+                    </li></br>
+					<li>
+						<sup>1</sup>Nanjing University of Science and Technology<br>
+						<sup>2</sup>Huaiyin Institute of Technology
+					</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="row">
+                <div class="col-md-4 col-md-offset-4 text-center">
+                    <ul class="nav nav-pills nav-justified">
+                        <li>
+                            <a href="https://arxiv.org/pdf/2405.09996">
+                            <image src="img/DCL_paper.png" height="60px">
+                                <h4><strong>Paper</strong></h4>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="video/video-demo.mp4" type="video/mp4">
+                            <image src="img/youtube_icon.png" height="60px">
+                                <h4><strong>Video</strong></h4>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" target="popup" onclick="window.open('','popup','width=600,height=400')">
+                            <image src="img/database_icon.png" height="60px">
+                                <h4><strong>Dataset</strong></h4>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/fanjunkai1/DCL">
+                            <image src="img/github.png" height="60px">
+                                <h4><strong>Code</strong></h4> 
+                            </a>
+                        </li> 
+                    </ul>
+                </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+				<h3>
+                    Video Results
+                </h3>
+                <video id="v0" width="100%" autoplay loop muted controls>
+                  <source src="video/video-demo.mp4" type="video/mp4" />
+                </video>
+						</div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Abstract
+                </h3>
+                <p class="text-justify">
+				In this paper, we study a challenging problem of simultaneously removing haze and estimating depth from real monocular hazy videos. 
+				These tasks are inherently complementary:enhanced depth estimation improves dehazing via the atmospheric scattering model (ASM), 
+				while superior dehazing contributes to more accurate depth estimation through the brightness consistency constraint (BCC). To tackle
+				these tasks, we propose a novel depth-centric learning framework that integrates the ASM model with the BCC constraint. Our key idea
+				is that both ASM and BCC rely on a shared depth estimation network. This network simultaneously leverages adjacent dehazed frames to 
+				enhance depth estimation using BCC and employs the refined depth cues to more effectively remove haze using ASM. Additionally, we 
+				leverage a non-aligned clear video and its estimated depth to independently regularize the dehazing and depth estimation networks. 
+				This is achieved by designing two discriminator networks: D<sub>MFIR</sub>, which enhances high-frequency details in dehazed videos, 
+				and <sub>MDR</sub>, which reduces the occurrence of black holes in low-texture regions. Extensive experiments demonstrate that the 
+				proposed method outperforms current state-of-the-art techniques in both video dehazing and depth estimation tasks, especially in 
+				real-world hazy scenes. 
+                </p>
+            </div>
+        </div>
+		
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Motivation
+                </h3>
+               <div class="text-center">
+                    <img src="img/motivation.png" width="450"/>
+					<p class="text-center">
+					<br>
+					Compare three different approaches to selfsupervised monocular depth estimation in real hazy scenes.
+					(a) Non-aligned hazy/clear image pairs obtained through the matching algorithm.
+					(b) Directly estimating depth from hazy video.
+					(c) Dehaze first, then estimate depth.
+					(d) Simultaneously dehaze and estimate depth.
+					</p>
+                </div>
+			</div>
+		</div>	
+		
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Method
+                </h3>
+                <div class="text-center">
+                    <img src="img/pipeline.png" width="750"/>
+					<p class="text-justify">
+					<br>
+					The pipeline of our Depth-Centric Learning (DCL) framework that effectively integrates the atmospheric scattering
+					model with the brightness consistency constraint through shared depth prediction. DMFIR enhances high-frequency 
+					detail recovery in dehazed frames, while DMDR reduces black holes in depth maps caused by weakly textured regions.
+					</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Results
+                </h3>
+				<div class="text-center">
+                    <img src="img/Tab_video_dehazing.png" width="750"/>
+					<p class="text-justify">
+					Quantitative results on three real-world hazy video datasets. ↓ denotes the lower the better. For dehazing methods thatrely 
+					on ground truth for training, we use Lmr to train them on the GoProHazy dataset. DrivingHazy and InternetHazy were tested with
+					dehazing models trained on GoProHazy. Note that all quantitative results were evaluated at an output resolution of 640×192.
+					</p>
+                </div>
+				<br>
+                <div class="text-center">
+                    <img src="img/video_dehazing-results.png" width="750"/>
+					<p class="text-center">
+					Comparing video dehazing results on GoProHazy (i), DrivingHazy (ii), and InternetHazy (iii), respectively, our method
+					effectively removes disent haze and estimates depth. The red box corresponds to the zoomed-in patch for better comparison.
+					</p>
+                </div>
+				
+				<div class="text-center">
+                    <img src="img/Tab_depth_estimation.png" width="750"/>
+					<p class="text-center">
+					Quantitative results. We compare our framework with previous state-of-the-art methods on DENSE-Fog dataset. All methods 
+					were trained on the GoProHazy dataset. Note that RobustDepth is trained on clear reference videos from GoProHazy, as it 
+					uses its own synthetic haze for training.
+					</p>
+                </div>
+				
+				<div class="text-center">
+                    <img src="img/depth_estimation-results.png" width="750"/>
+					<p class="text-center">
+					Qualitative results on GoProHazy (i) and DENSE-Fog (ii-dense, iii-light). Our method demonstrates good dehazing
+					generalization and more accurate depth in real hazy scenes.
+					</p>
+                </div>
+				
+				<div class="text-center">
+                    <img src="img/MoreOurResults.png" width="750"/>
+					<p class="text-center">
+					Our method visualizes consecutive frame dehazing and depth estimation results on GoProHazy
+					</p>
+                </div>
+
+            </div>
+        </div>
+		
+		
+            
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+				
+		
+                <h3>Citation</h3>	
+				
+				<p>If you find our work useful in your research, please consider citing:</p>			
+				<a href=""><img style="float: left; padding: 10px; PADDING-RIGHT: 30px;" alt="paper thumbnail" src="img/paper_thumbnail.png" width=160></a>
+		
+			<textarea id="bibtex" class="form-control" readonly>
+			
+@artical{fan2024Depth,
+	title={Depth-Centric Dehazing and Depth-Estimation from Real-World Hazy Driving Video},
+	author={Fan, Junkai and Wang, Kun and Yan, Zhiqiang and Chen, Xiang and Gao Shangbin and Li, Jun and Yang, Jian},
+	booktitle={arxiv},
+	pages={26109--26119},
+	year={2024}
+}</textarea>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Acknowledgements
+                </h3>
+                <p class="text-justify">
+                Thanks to Ricardo Martin-Brualla and David Salesin for their comments on the text, and to George Drettakis and Georgios Kopanas for graciously assisting us with our baseline evaluation.
+                    <br>
+                The website template was borrowed from <a href="http://mgharbi.com/">Michaël Gharbi</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
