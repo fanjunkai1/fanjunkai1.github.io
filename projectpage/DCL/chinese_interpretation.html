@@ -1,0 +1,468 @@
+
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>DCL 中文解读</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta property="og:image" content="https://fanjunkai1.github.io/projectpage/DCL/video/video-demo.mp4">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1296">
+    <meta property="og:image:height" content="840">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fanjunkai1.github.io/projectpage/DCL/"/>
+    <meta property="og:title" content="Depth-Centric Dehazing and Depth-Estimation from Real-World Hazy Driving Video" />
+    <meta property="og:description" content="Real driving-video dehazing poses a significant challenge due to the inherent difficulty in acquiring precisely aligned hazy/clear video pairs for effective model training, especially in dynamic driving scenarios with unpredictable weather conditions. 
+	In this paper, we propose a pioneering approach that addresses this challenge through a non-aligned regularization strategy. Our core concept involves identifying clear frames that closely match hazy frames, serving as references to supervise a video dehazing network. Our approach comprises 
+	two key components: reference matching and video dehazing. Firstly, we introduce a non-aligned reference frame matching module, leveraging an adaptive sliding window to match high-quality reference frames from clear videos. Video dehazing incorporates flow-guided cosine attention sampler and
+	deformable cosine attention fusion modules to enhance spatial multi-frame alignment and fuse their improved information. To validate our approach, we collect a GoPro-Hazy dataset captured effortlessly with GoPro cameras in diverse rural and urban road environments. Extensive experiments 
+	demonstrate the superiority of the proposed method over current state-of-the-art methods in the challenging task of real driving-video dehazing. />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Driving-Video Dehazing with Non-Aligned Regularization for Safety Assistance" />
+    <meta name="twitter:description" content="Real driving-video dehazing poses a significant challenge due to the inherent difficulty in acquiring precisely aligned hazy/clear video pairs for effective model training, especially in dynamic driving scenarios with unpredictable weather conditions. 
+	In this paper, we propose a pioneering approach that addresses this challenge through a non-aligned regularization strategy. Our core concept involves identifying clear frames that closely match hazy frames, serving as references to supervise a video dehazing network. Our approach comprises 
+	two key components: reference matching and video dehazing. Firstly, we introduce a non-aligned reference frame matching module, leveraging an adaptive sliding window to match high-quality reference frames from clear videos. Video dehazing incorporates flow-guided cosine attention sampler and
+	deformable cosine attention fusion modules to enhance spatial multi-frame alignment and fuse their improved information. To validate our approach, we collect a GoPro-Hazy dataset captured effortlessly with GoPro cameras in diverse rural and urban road environments. Extensive experiments 
+	demonstrate the superiority of the proposed method over current state-of-the-art methods in the challenging task of real driving-video dehazing. />
+	
+    <meta name="twitter:image" content="https://fanjunkai1.github.io/projectpage/DCL/video/video-demo.mp4" />
+
+
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+	
+	<script type="text/javascript" async
+	src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+	</script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    
+    <script src="js/app.js"></script>
+    <script src="js/video_comparison.js"></script>
+</head>
+
+<body>
+    <div class="container" id="main">
+        <div class="row">
+            <h2 class="col-md-12 text-center">
+                <br><b> Depth-Centric Dehazing and Depth-Estimation from <br>Real-World Hazy Driving Video </b></br> 
+            </h2>
+			<h3 class="col-md-12 text-center">
+                <br> 中文解读 </br> 
+            </h3>
+			<h4 class="col-md-12 text-center">
+                <br> 樊俊凯, PCA Lab, 南京理工大学</br> 
+            </h4>
+			
+        </div>
+        <div class="row">
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    简单总结
+                </h3>
+                <p class="text-justify">
+				我们的方法能够以最小的开销和最快的推理速度去同时获得视频去雾和深度估计的结果。
+                </p>
+            </div>
+        </div>
+		
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    现存问题
+                </h3>
+               <div class="text-center">
+                    
+					<p class="text-left" style="text-align: justify;">
+					目前现有的视频去雾方法，主要以室内真实烟雾数据集和合成雾数据集为研究对象。室内真实烟雾数据集主要以REVIDE为代表，这个数据集的优点是有ground truth，能够进行直接映射学习。
+					缺点是很难在真实的室外雾场景下获得好的去雾效果。这类方法的代表有CG-IDN（CVPR 2021）和PM-Net(ACMMM 2022)。 其次是以合成雾为研究对象的视频去雾方法，合成的雾视频数据集主要
+					以HazeWorld为代表，这个数据集的优点是数据集量大，利用depth对雾进行合成，使得雾场景效果更逼真。但是，合成的雾，很难去模拟真实场景下的各种退化，例如：粒子散射带来的模糊
+					和图像质量的退化。更重要的一点是合成雾利用的depth信息是有限的，大多数depth map的有效距离只有100-150米的范围。这使得合成的雾图像只在有深度信息的区域才会有雾。因此，这是
+					合成雾与真实场景雾的主要差异来源。在合成雾上训练，测试在真实场景下，这类方法主要以MAP-Net（CVPR 2023）为代表，这类方法在真实场景下往往去雾能力有限，只能对近景的雾有效，
+					远处的雾很难移除。
+					<br>
+					<br>
+					<p class="text-left" style="text-align: justify;">
+                    基于以上存在的问题，DVD（CVPR 2024）提出一个基于非对齐的模型训练方式，即利用“非对齐参考帧匹配”和“多帧参考的非对齐损失”去解决采集的真实场景视频数据（GoProHazy）存在的时
+					间和空间维度上的不对齐。并且实验表明这种非对齐的训练方式，确实能够在真实场景下取得不错去雾效果。但是，尽管DVD的去雾效果不错，但是考虑到辅助驾驶的应用场景，DVD的推理速
+					度明显是慢了的。
+					</p>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图1.png" width="450" alt="图片描述">
+					  <br>
+					  <figcaption>图1. （左）MAP-Net在真实场景下去雾结果，（右）推理时间比较</figcaption>
+					</figure>
+					<br>
+					<p class="text-left">
+					综上所述，我们得到了二个关键点：1. 非对齐的训练方式确实对真实场景去雾是有效的。2. 现有的真实场景去雾方法DVD的推理速度需要被提升。
+					</p>
+                </div>
+			</div>
+		</div>	
+		
+
+
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    研究动机
+                </h3>
+               <div class="text-center">
+                    
+					<p class="text-left" style="text-align: justify;">
+					由于我们主要的应用场景是无人车，对于无人车的来说，看得清，看的远，以及能够感知周围环境的距离是极其重要的。对于无人车的距离感知其实就是深度（depth）感知。因此，我们一直
+					考虑如何让我们的模型既能去雾又能估计深度。真实雾场景下，RGB相机能见度和激光雷达感知都是受限的且没有Ground Truth数据供模型训练。因此，我们考虑利用非对齐去解决去雾和深度
+					估计问题。此外，我们也发现大气散射模型和自监督深度估计的重投影约束在本质上是构成相互约束条件，这对于训练参数学习模型来说，可以使得模型学习更稳定的且准确的学到目标的分
+					布。所以，这二个任务在本质上是互补的，我们联立求解“去雾”和“自监督深度估计”任务，提出的联合表达式如下：
+					</p>
+					
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图2.png"  style="width: 500px;">
+					  <br>
+					  <figcaption>图2. 视频去雾和深度估计的联合求解表达式</figcaption>
+					</figure>
+					
+					<br>
+					<p class="text-left" style="text-align: justify;">
+					𝐼<sub>t</sub> 表示当前雾帧，𝐽<sub>t</sub> 表示当前的雾帧对应的清晰帧（即我们所求的量），𝐴<sub>∞</sub>指无限远大气光(或全局大气光)，t指传输介质图（或光的透射率图），𝛽指散射
+					系数，d是深度（depth）。𝐽<sub>s</sub>指相邻雾帧所对应的清晰帧。𝒮是双线性差值采样，x和y分别代表当前帧和邻近帧上像素的位置。K表示相机内参，𝑃<sub>𝑥→𝑦</sub>表示相机的位姿信息。
+					</p>
+					
+					<br>
+					
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图3.png"  style="width: 750px;">
+					  <br>
+					  <figcaption>图3. 比较不同的去雾和深度估计方式</figcaption>
+					</figure>
+					
+					<br>
+					
+					<p class="text-left" style="text-align: justify;">
+					关于图2中每个子图的解释如下：（a）是我们利用非对齐参考匹配获得的非对齐雾/清晰的视频帧对。（b）直接从雾视频里去估计深度信息，由于雾天加剧了“弱纹理”，导致地面的弱纹理区域
+					深度不正确。（c）利用先去雾的结果去估计深度，这种方式由于去雾结果存在一些“细节伪影”，导致估计的深度图看起来很模糊。（d）我们首次提出的在真实雾视频场景下，同时优化视频去
+					雾和深度估计二个任务。由于二个任务是共享深度信息的，因此二个任务本质是互补的，所以联立求解，有助于获得更好的结果。
+					<br>
+					<br>
+					通过上述的联合求解表达式和不同去雾和深度估计方式的比较，我们可以发现，联立求解去雾和深度估计确实是会获得更好的效果。因此，我们基于这个发现，我们设计了一个以depth学习为主
+					导的去雾和深度估计联合学习框架。接下来，我们介绍下自监督深度估计的相关概念。
+					</p>
+					
+                </div>
+			</div>
+		</div>	
+		
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    自监督深度估计
+                </h3>
+               <div class="text-center">
+                    
+					<p class="text-left" style="text-align: justify;">
+					自监督深度估计的前提条件：基于光度一致性，即指在不同视角下拍摄的同一场景中的像素，应该具有相同的光度信息（即颜色、亮度等）。简单来说，就是通过自监督学习方式，利用不同视
+					角的图像或视图之间的关系来估计深度信息，而不依赖于手工标注的深度真值数据。
+					<br>
+					<br>
+					
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图4.png"  style="width: 500px;">
+					  <br>
+					  <figcaption>图4. 雾天自监督督深度估计流程</figcaption>
+					</figure>
+					
+					<br>
+					<p class="text-left">
+
+					𝐼<sub>t</sub>指当前雾帧,  𝐼<sub>s</sub>指相邻雾帧。𝒮是双线性差值采样，x和y分别代表当前帧和邻近帧上像素的位置。K表示相机内参，𝑃<sub>𝑥→𝑦</sub>表示相机的位姿信息。d(x) 表示depth
+					（深度信息）。\( \hat{𝐼} \)<sub>t</sub>: 双线性差值采样获得当前雾帧； ℒ<sub>pe</sub>：photometric error（光度误差）；ℒ<sub>s</sub>：smoothness loss（平滑损失）；𝑑<sub>𝑡<sup>*</sup></sub>：
+					均值归一化的逆深度，𝜕<sub>x</sub> 和 𝜕<sub>y</sub> 分别指水平方向和垂直方向上的梯度。SSIM: 结构相似度损失。𝛼：权重系数， 一般取值0.85。
+					<br>
+					<br>
+					总结来说，光度一致性在自监督深度估计中是指，通过从不同视角观察同一场景时，相同的物体或像素应该保持一致的光度信息，借此约束深度估计模型，以提高深度预测的准确性。更多的细节
+					参见 MonoDepth2 （CVPR 2019）
+					</p>
+                </div>
+			</div>
+		</div>	
+		
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    提出方法
+                </h3>
+				<h4>
+					在提出的DCL框架中，我们考虑一个更符合真实场景的假设，我们假设𝛽是一个非均匀图。
+				</h4>
+               <div class="text-center">
+ 
+					<p class="text-left" style="text-align: justify;">
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图5.png"  style="width: 750px;">
+					  <br>
+					  <figcaption>图5. 提出的深度中心学习（DCL）框架的流程，通过共享深度预测，有效地将大气散射模型与亮度一致性约束结合在一起。𝑫<sub>MFIR</sub>增强了去雾帧中的高频细节恢复，而
+					  𝑫<sub>MDR</sub>
+					  则减少了由纹理较弱区域引起的深度图中的黑洞问题。
+					  </figcaption>
+					</figure>
+					
+					<br>
+					
+					<p class="text-left" style="text-align: justify;">
+
+					1. 从框架不难看出，基于大气散射模型的“重建”损失对利用亮度一致性的自监督深度估计构建额外的约束条件，并且更精确的深度信息也有助于精确的解耦合大气散射模型参数，从而获得更好
+					的去雾结果，所以二者是互补的。
+					<br>
+					<br>
+					2. 自监督深度估计的成立条件是基于“光度一致性”假设，这个假设的前提条件就是：输入的连续RGB帧的对应像素的亮度是一致的。因此，我们利用从非对齐的清晰参考视频上获得的dpeth去正
+					则深度估计网络𝛷<sub>d</sub>的同时，也会对去雾网络形成一个亮度一致性约束。
+					<br>
+					<br>
+					3. 𝑫<sub>MFIR</sub>是为了增强去雾后的视频帧的高频细节恢复。𝑫<sub>MDR</sub>则是为了解决深度估计网络学习中产生的弱纹理区域黑洞问题，同时也会对去雾网络𝛷<sub>J</sub> 产生一个
+					亮度一致性正则。
+					<br>
+					<br>
+					4. 关于“为什么有𝛽是非均匀图的假设”的解释：真实场景下，特别在室外，绝大多数的雾都是“非均匀状态的”，例如：高速公路上的团雾就是典型的现象。因此，雾是不均匀的，则散射系数𝛽也
+					应该是非均匀的。 具体的实验参见讨论与分析部分解读。
+					</p>
+                </div>
+			</div>
+		</div>	
+		
+		
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    实验结果
+                </h3>
+               <div class="text-center">
+                    
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图6.png"  style="width: 750px;">
+					  <figcaption>图6. 三个真实世界模糊视频数据集的定量结果。↓ 表示越低越好。DrivingHazy和InternetHazy的数据集则使用 GoProHazy上训练的去雾模型进行测试。请注意，所有定量结果均在
+					  输出分辨率为640×192进行评估。
+					  </figcaption>
+					</figure>
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图7.png"  style="width: 750px;">
+					  <figcaption>图7. 我们在真实的雾视频数据集GoProHazy上与其他先进方法的可视化对比，并且我们的方法能够同时给出了去雾和深度估计的效果。
+					  </figcaption>
+					</figure>
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图8.png"  style="width: 750px;">
+					  <figcaption>图8. 定量结果比较。我们将提出的框架(DCL)与最新方法在DENSE-Fog数据集上进行了比较。
+					  </figcaption>
+					</figure>
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图9.png"  style="width: 750px;">
+					  <figcaption>图9. 提出的方法分别在GoProHazy, DENS-Fog(dense)和DENS-Fog(light)三个真实的雾天视频数据集上与其他先进方法对比的效果图，并且我们的方法同时给出了去雾和深度估计的效果。
+					  </figcaption>
+					</figure>
+					
+					<br>
+					<p class="text-left" style="text-align: justify;">
+					实验总结：从定量评估和可视化对比结果来看，提出的方案不仅能同时给出去雾和深度估计的结果，且能够达到最佳的推理速度这对于无人车的部署是非常友好的。此外，提出的DCL模型也在公
+					开数据集DENS-Fog上也表明了良好的泛化性。
+					</p>
+					
+                </div>
+			</div>
+		</div>	
+		
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    分析讨论
+                </h3>
+               <div class="text-center">
+                    
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图10.png"  style="width: 450px;">
+					  <br>
+					  <figcaption>图10. 消融提出的核心模块在DENSE-Fog（light）数据集上。
+					  </figcaption>
+					</figure>
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图11.png"  style="width: 450px;">
+					  <br>
+					  <figcaption>图11. 消融不同的损失函数在GoProHazy数据集上。
+					  </figcaption>
+					</figure>
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图12.png"  style="width: 750px;">
+					  <br>
+					  <figcaption>图12. 核心模块在深度估计结果上的消融可视化，DCL（Ours）在车窗和小目标物体的表现上更好。
+					  </figcaption>
+					</figure>
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图13.png"  style="width: 750px;">
+					  <br>
+					  <figcaption>图13. 消融可视化对应的核心模块在对应的任务上，提出𝑫<sub>MFIR</sub>和𝑫<sub>MDR</sub>的效果表现明显。
+					  </figcaption>
+					</figure>
+					
+					<br>
+					<p class="text-left" style="text-align: justify;">
+					实验总结：从定量评估和可视化对比结果来看，提出的方案不仅能同时给出去雾和深度估计的结果，且能够达到最佳的推理速度这对于无人车的部署是非常友好的。此外，提出的DCL模型也在公
+					开数据集DENS-Fog上也表明了良好的泛化性。
+					</p>
+					<br>
+					<p class="text-left" style="text-align: justify;">
+					总结： 无论从模块消融的定量评估上来看，还是消融结果的可视化来看，我们提出模块𝑫<sub>MFIR</sub>和𝑫<sub>MDR</sub>都展示出了非常明显的效果。特别在一些弱纹理的区域以及一些远距
+					离的小目标上，提出模块都展示出了明显的提升。针对不同任务（指去雾和深度估计）提出的模块𝑫<sub>MFIR</sub>和𝑫<sub>MDR</sub>，我们也分别在对应的任务上给出相应消融可视化展示。结
+					果表明：针对不同任务提出的模块，效果明显。
+					</p>
+					
+					<br>
+					
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图14.png"  style="width: 450px;">
+					  <br>
+					  <figcaption>图14. 消融提出的核心模块在DENSE-Fog（light）数据集上
+					  </figcaption>
+					</figure>
+					<br>
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图15.png"  style="width: 450px;">
+					  <br>
+					  <figcaption>图15. 消融不同的损失函数在GoProHazy数据集上
+					  </figcaption>
+					</figure>
+					<br>
+					<p class="text-left" style="text-align: justify;">
+					总结： 我们进行了不同β值（即常数或非均匀）的对比实验。结果表明，非均匀β能带来更好的深度估计精度，并且我们也给出了视觉的对比结果。在之前的研究中，大家给β定义为常数，其实
+					是将大气散射模型抽象为一个更简单的表达式，在DCL中我们考虑的是一个更符合真实场景下的大气散射模型，因此，我们定义β为一个为均匀的变量。
+					</p>
+					
+					<figure style="text-align: center;">
+					  <img src="./chinese_img/图16.png"  style="width: 500px;">
+					  <br>
+					  <figcaption>图16. 消融不同的损失函数在GoProHazy数据集上
+					  </figcaption>
+					</figure>
+					<br>
+					
+					<p class="text-left" style="text-align: justify;">
+					实验结果表明，预测深度优于参考深度，主要是由于大气散射模型通过重建损失（ℒ<sub>rec</sub>）对深度估计施加了显著约束所导致的，而参考的depth是由Monodepth2在参考的非对齐清晰视
+					频上获得的。
+					</p>
+					
+                </div>
+			</div>
+		</div>	
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    视频演示
+                </h3>
+               <div class="text-center">
+					
+					<div style="display: flex; justify-content: center;">
+					  <video id="v0" width="100%" autoplay loop muted controls>
+						<source src="./video/video-demo.mp4" type="video/mp4">
+					  </video>
+					</div>
+					
+					<br>
+					<p class="text-left" style="text-align: justify;">
+					从视频的demo上来看，不难发现，我们提出的方法（DCL）相较于当前的SoTA视频去雾方法，有着更好的去雾结果以及去雾视频的稳定性（指连续帧的时间一致性，即闪烁和抖动小）。 相较与当
+					前SoTA的自监督深度估计方法，我们的方法在真实雾场景下的深度估计效果更好，特别在弱纹理区域以及depth的质量上。
+					</p>
+                </div>
+			</div>
+		</div>	
+		
+		
+		<div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    问题解答
+                </h3>
+               <div class="text-center">
+					<p class="text-left" style="text-align: justify;">
+					问题一：如何保证视频的一致性？
+					<br>
+					<br>
+					
+					答：在DCL模型中，我们主要是通过利用depth重投影去约束去雾结果的时间一致性。从本质上说，利用depth约束前后帧的时间一致性与利用光流约束的思想是一致的，都是利用相邻帧的对应位置上像素点的运动关系去实现时间一致性约束。
+						<br>
+						<br>
+						具体的解释如下：
+
+						时间一致性主要包括两个方面：亮度一致性和内容一致性。<br>
+
+						1）亮度一致性：在自监督深度估计中，通过深度重投影来重建相邻帧的前提条件是它们输入的连续帧的亮度必须保持一致。通过使用自监督学习方法，和GoProHazy的非对齐且清晰参考视频，我们可以获得高质量的深度信息，从而对深度估
+						计网络进行正则化，在一定程度上也确保了去雾网络获得的去雾相邻帧之间的亮度是保持一致，避免出现闪烁现象。<br>
+
+						2）内容一致性：在我们的框架中，基于大气散射模型构建的重建损失有效地加强了内容一致性，即使是在天空区域，也能最大程度地减少伪影。<br>
+
+						此外，为了验证提出模型DCL的时间一致性，可参见上面视频演示，其中我们的去雾视频的稳定性显然优于其他方法的。 
+					</p>
+                </div>
+			</div>
+		</div>	
+		
+		
+		<div class="row">
+            <div class="col-md-9 col-md-offset-2">
+                <h3>
+                    参考文献
+                </h3>
+               <div class="text-center">
+					<p class="text-left" style="text-align: justify;">
+					[1] Zhang, Xinyi, et al. “Learning to restore hazy video: A new real-world dataset and a new method.” In CVPR 2021.（CG-IDN）<br>
+					[2] Liu, Ye, et al. "Phase-based memory network for video dehazing."  In ACM MM 2022. (PM-Net)<br>
+					[3] Xu, Jiaqi, et al. “Video dehazing via a multi-range temporal alignment network with physical prior.”  In CVPR 2023.（MAP-Net）<br>
+					[4] Fan, Junkai, et al. “Driving-Video Dehazing with Non-Aligned Regularization for Safety Assistance.”  In CVPR 2024.（DVD）<br>
+					[5] Godard, Clément, et al. "Digging into self-supervised monocular depth estimation." In CVPR 2019.（Monodepth2）<br>
+					<br>
+					<h4>
+					感谢大家的阅读，更多的细节请参见我们的论文。
+					</h4>
+					<br>
+					<br>
+					<br>
+				    <br>
+					</p>
+                </div>
+			</div>
+		</div>
+
+            
+    </div>
+</body>
+</html>
